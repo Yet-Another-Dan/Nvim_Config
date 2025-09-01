@@ -24,12 +24,23 @@ vim.opt.expandtab = true
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 
+
+vim.o.guifont = "0xProto"
+
 -- Diagnostic keymaps
 vim.keymap.set('n', '[d', function() vim.diagnostic.jump({count=-1}) end, { desc = 'Go to previous Diagnostic message' })
 vim.keymap.set('n', ']d', function() vim.diagnostic.jump({count= 1}) end, { desc = 'Go to next Diagnostic message' })
 
 
 vim.opt.completeopt = {"menuone", "noselect", "popup"}
+
+vim.lsp.config["rust-analyzer"] = {
+  cmd = {"rust-analyzer"},
+  filetypes = {"rust"},
+  root_markers = {".git", "cargo.toml", "cargo.lock"}, -- what file to look for to signify the "top" of a project
+
+
+}
 
 vim.lsp.config["lua-language-server"] = {
   cmd = {"lua-language-server"},
@@ -71,24 +82,29 @@ vim.lsp.config["texlab"] = {
   cmd = {"texlab"},
   root_markers = {".git", "Tectonic.toml","texlabroot",".latexmkrc","main.tex"},
   filetypes = {"tex", "plaintex", "latex", "bib"},
-  settings = {
-    texlab = {
-      build = {
-        executable = "tectonic",
-        args = {
-          "-X",
-          "compile",
-          "%f",
-          [[--synctex]],
-          [[--keep-logs]],
-          [[--keep-intermediates]],
+    settings = {
+      texlab = {
+        build = {
+          executable = "tectonic",
+            args = {
+              "-X",
+              "compile",
+              "%f",
+              [[--synctex]],
+              [[--keep-logs]],
+              [[--keep-intermediates]],
+    	    }
         }
-      }
-    }
-  }
+  	  }
+	  }
 }
 
-vim.lsp.enable({"lua-language-server","clangd","pyright","texlab"})
+
+
+vim.lsp.enable('lua-language-server')
+vim.lsp.enable('clangd')
+vim.lsp.enable('pyright')
+vim.lsp.enable('rust-analyzer')
 
 
 vim.api.nvim_create_autocmd('LspAttach', {
